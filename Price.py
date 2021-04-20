@@ -3,29 +3,42 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
 import time
-
-ask = input("What do you want to search for on Amazon? ")
-
 
 PATH = '/Users/shinjiy/Desktop/chromedriver'
 
-driver = webdriver.Chrome(PATH)
+
+def get_html(ask):
+    driver = webdriver.Chrome(PATH)
+    driver.get("https://www.amazon.com/")
+
+    driver.find_element_by_id("twotabsearchtextbox").send_keys(ask)
+
+    driver.find_element_by_id("nav-search-submit-button").click()
+
+    time.sleep(5)
+
+    return driver.page_source
+
+def main():
+
+    ask = input("What do you want to search for on Amazon? ")
+
+    html = get_html(ask)
+
+    soup = BeautifulSoup(html, "lxml")
+
+    items = soup.find_all('div', {'data-asin': True, 'data-component-type': 's-search-result'})
+
+    for item in items:
+        print(item.h2.text)
 
 
-driver.get("https://www.amazon.com/")
+if __name__ == '__main__':
+    main()
+    
+    
 
 
 
-search = driver.find_element_by_id("twotabsearchtextbox")
-
-
-
-search.send_keys(ask)
-search.send_keys(Keys.RETURN)
-
-
-
-time.sleep(5)
-
-driver.quit()
