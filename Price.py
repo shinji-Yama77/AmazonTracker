@@ -34,6 +34,14 @@ def main():
     for item in items:
         print(item.h2.text)
 
+        try:
+            price = item.find('span', class_='a-price-whole').text
+            print(price)
+        except:
+            price = None
+            print(price)
+        
+
 
 if __name__ == '__main__':
     main()
