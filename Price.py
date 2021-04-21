@@ -9,6 +9,11 @@ import time
 PATH = '/Users/shinjiy/Desktop/chromedriver'
 
 
+
+def write_csv(any_data):
+    with open()
+
+
 def get_html(ask):
     driver = webdriver.Chrome(PATH)
     driver.get("https://www.amazon.com/")
@@ -21,6 +26,24 @@ def get_html(ask):
 
     return driver.page_source
 
+def scrape_data(item):
+    try:
+        h2 = item.h2
+    except:
+        title = ' '
+    else:
+        title = h2.text.strip()
+        
+    try:
+        price = item.find('span', class_='a-price-whole').text.strip(".").strip()
+    except:
+        price = ' '
+
+
+    data = {'title': title, 'price': price}
+            
+    return data
+
 def main():
 
     ask = input("What do you want to search for on Amazon? ")
@@ -31,15 +54,12 @@ def main():
 
     items = soup.find_all('div', {'data-asin': True, 'data-component-type': 's-search-result'})
 
-    for item in items:
-        print(item.h2.text)
+    any_data = []
 
-        try:
-            price = item.find('span', class_='a-price-whole').text
-            print(price)
-        except:
-            price = None
-            print(price)
+    for item in items:
+        data = scrape_data(item)
+        any_data.append(data)
+        
         
 
 
